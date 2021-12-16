@@ -5,6 +5,13 @@ import * as Long from 'long'
 export const protobufPackage = 'batphonghan.checkers.checkers'
 
 /** this line is used by starport scaffolding # proto/tx/message */
+export interface MsgRejectGame {
+  creator: string
+  idValue: string
+}
+
+export interface MsgRejectGameResponse {}
+
 export interface MsgPlayMove {
   creator: string
   idValue: string
@@ -16,6 +23,9 @@ export interface MsgPlayMove {
 
 export interface MsgPlayMoveResponse {
   idValue: string
+  capturedX: number
+  capturedY: number
+  winner: string
 }
 
 export interface MsgCreateGame {
@@ -26,6 +36,116 @@ export interface MsgCreateGame {
 
 export interface MsgCreateGameResponse {
   idValue: string
+}
+
+const baseMsgRejectGame: object = { creator: '', idValue: '' }
+
+export const MsgRejectGame = {
+  encode(message: MsgRejectGame, writer: Writer = Writer.create()): Writer {
+    if (message.creator !== '') {
+      writer.uint32(10).string(message.creator)
+    }
+    if (message.idValue !== '') {
+      writer.uint32(18).string(message.idValue)
+    }
+    return writer
+  },
+
+  decode(input: Reader | Uint8Array, length?: number): MsgRejectGame {
+    const reader = input instanceof Uint8Array ? new Reader(input) : input
+    let end = length === undefined ? reader.len : reader.pos + length
+    const message = { ...baseMsgRejectGame } as MsgRejectGame
+    while (reader.pos < end) {
+      const tag = reader.uint32()
+      switch (tag >>> 3) {
+        case 1:
+          message.creator = reader.string()
+          break
+        case 2:
+          message.idValue = reader.string()
+          break
+        default:
+          reader.skipType(tag & 7)
+          break
+      }
+    }
+    return message
+  },
+
+  fromJSON(object: any): MsgRejectGame {
+    const message = { ...baseMsgRejectGame } as MsgRejectGame
+    if (object.creator !== undefined && object.creator !== null) {
+      message.creator = String(object.creator)
+    } else {
+      message.creator = ''
+    }
+    if (object.idValue !== undefined && object.idValue !== null) {
+      message.idValue = String(object.idValue)
+    } else {
+      message.idValue = ''
+    }
+    return message
+  },
+
+  toJSON(message: MsgRejectGame): unknown {
+    const obj: any = {}
+    message.creator !== undefined && (obj.creator = message.creator)
+    message.idValue !== undefined && (obj.idValue = message.idValue)
+    return obj
+  },
+
+  fromPartial(object: DeepPartial<MsgRejectGame>): MsgRejectGame {
+    const message = { ...baseMsgRejectGame } as MsgRejectGame
+    if (object.creator !== undefined && object.creator !== null) {
+      message.creator = object.creator
+    } else {
+      message.creator = ''
+    }
+    if (object.idValue !== undefined && object.idValue !== null) {
+      message.idValue = object.idValue
+    } else {
+      message.idValue = ''
+    }
+    return message
+  }
+}
+
+const baseMsgRejectGameResponse: object = {}
+
+export const MsgRejectGameResponse = {
+  encode(_: MsgRejectGameResponse, writer: Writer = Writer.create()): Writer {
+    return writer
+  },
+
+  decode(input: Reader | Uint8Array, length?: number): MsgRejectGameResponse {
+    const reader = input instanceof Uint8Array ? new Reader(input) : input
+    let end = length === undefined ? reader.len : reader.pos + length
+    const message = { ...baseMsgRejectGameResponse } as MsgRejectGameResponse
+    while (reader.pos < end) {
+      const tag = reader.uint32()
+      switch (tag >>> 3) {
+        default:
+          reader.skipType(tag & 7)
+          break
+      }
+    }
+    return message
+  },
+
+  fromJSON(_: any): MsgRejectGameResponse {
+    const message = { ...baseMsgRejectGameResponse } as MsgRejectGameResponse
+    return message
+  },
+
+  toJSON(_: MsgRejectGameResponse): unknown {
+    const obj: any = {}
+    return obj
+  },
+
+  fromPartial(_: DeepPartial<MsgRejectGameResponse>): MsgRejectGameResponse {
+    const message = { ...baseMsgRejectGameResponse } as MsgRejectGameResponse
+    return message
+  }
 }
 
 const baseMsgPlayMove: object = { creator: '', idValue: '', fromX: 0, fromY: 0, toX: 0, toY: 0 }
@@ -168,12 +288,21 @@ export const MsgPlayMove = {
   }
 }
 
-const baseMsgPlayMoveResponse: object = { idValue: '' }
+const baseMsgPlayMoveResponse: object = { idValue: '', capturedX: 0, capturedY: 0, winner: '' }
 
 export const MsgPlayMoveResponse = {
   encode(message: MsgPlayMoveResponse, writer: Writer = Writer.create()): Writer {
     if (message.idValue !== '') {
       writer.uint32(10).string(message.idValue)
+    }
+    if (message.capturedX !== 0) {
+      writer.uint32(16).int64(message.capturedX)
+    }
+    if (message.capturedY !== 0) {
+      writer.uint32(24).int64(message.capturedY)
+    }
+    if (message.winner !== '') {
+      writer.uint32(34).string(message.winner)
     }
     return writer
   },
@@ -187,6 +316,15 @@ export const MsgPlayMoveResponse = {
       switch (tag >>> 3) {
         case 1:
           message.idValue = reader.string()
+          break
+        case 2:
+          message.capturedX = longToNumber(reader.int64() as Long)
+          break
+        case 3:
+          message.capturedY = longToNumber(reader.int64() as Long)
+          break
+        case 4:
+          message.winner = reader.string()
           break
         default:
           reader.skipType(tag & 7)
@@ -203,12 +341,30 @@ export const MsgPlayMoveResponse = {
     } else {
       message.idValue = ''
     }
+    if (object.capturedX !== undefined && object.capturedX !== null) {
+      message.capturedX = Number(object.capturedX)
+    } else {
+      message.capturedX = 0
+    }
+    if (object.capturedY !== undefined && object.capturedY !== null) {
+      message.capturedY = Number(object.capturedY)
+    } else {
+      message.capturedY = 0
+    }
+    if (object.winner !== undefined && object.winner !== null) {
+      message.winner = String(object.winner)
+    } else {
+      message.winner = ''
+    }
     return message
   },
 
   toJSON(message: MsgPlayMoveResponse): unknown {
     const obj: any = {}
     message.idValue !== undefined && (obj.idValue = message.idValue)
+    message.capturedX !== undefined && (obj.capturedX = message.capturedX)
+    message.capturedY !== undefined && (obj.capturedY = message.capturedY)
+    message.winner !== undefined && (obj.winner = message.winner)
     return obj
   },
 
@@ -218,6 +374,21 @@ export const MsgPlayMoveResponse = {
       message.idValue = object.idValue
     } else {
       message.idValue = ''
+    }
+    if (object.capturedX !== undefined && object.capturedX !== null) {
+      message.capturedX = object.capturedX
+    } else {
+      message.capturedX = 0
+    }
+    if (object.capturedY !== undefined && object.capturedY !== null) {
+      message.capturedY = object.capturedY
+    } else {
+      message.capturedY = 0
+    }
+    if (object.winner !== undefined && object.winner !== null) {
+      message.winner = object.winner
+    } else {
+      message.winner = ''
     }
     return message
   }
@@ -370,6 +541,7 @@ export const MsgCreateGameResponse = {
 /** Msg defines the Msg service. */
 export interface Msg {
   /** this line is used by starport scaffolding # proto/tx/rpc */
+  RejectGame(request: MsgRejectGame): Promise<MsgRejectGameResponse>
   PlayMove(request: MsgPlayMove): Promise<MsgPlayMoveResponse>
   CreateGame(request: MsgCreateGame): Promise<MsgCreateGameResponse>
 }
@@ -379,6 +551,12 @@ export class MsgClientImpl implements Msg {
   constructor(rpc: Rpc) {
     this.rpc = rpc
   }
+  RejectGame(request: MsgRejectGame): Promise<MsgRejectGameResponse> {
+    const data = MsgRejectGame.encode(request).finish()
+    const promise = this.rpc.request('batphonghan.checkers.checkers.Msg', 'RejectGame', data)
+    return promise.then((data) => MsgRejectGameResponse.decode(new Reader(data)))
+  }
+
   PlayMove(request: MsgPlayMove): Promise<MsgPlayMoveResponse> {
     const data = MsgPlayMove.encode(request).finish()
     const promise = this.rpc.request('batphonghan.checkers.checkers.Msg', 'PlayMove', data)

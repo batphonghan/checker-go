@@ -6,11 +6,13 @@ import { Registry, OfflineSigner, EncodeObject, DirectSecp256k1HdWallet } from "
 import { Api } from "./rest";
 import { MsgPlayMove } from "./types/checkers/tx";
 import { MsgCreateGame } from "./types/checkers/tx";
+import { MsgRejectGame } from "./types/checkers/tx";
 
 
 const types = [
   ["/batphonghan.checkers.checkers.MsgPlayMove", MsgPlayMove],
   ["/batphonghan.checkers.checkers.MsgCreateGame", MsgCreateGame],
+  ["/batphonghan.checkers.checkers.MsgRejectGame", MsgRejectGame],
   
 ];
 export const MissingWalletError = new Error("wallet is required");
@@ -41,6 +43,7 @@ const txClient = async (wallet: OfflineSigner, { addr: addr }: TxClientOptions =
     signAndBroadcast: (msgs: EncodeObject[], { fee, memo }: SignAndBroadcastOptions = {fee: defaultFee, memo: ""}) => client.signAndBroadcast(address, msgs, fee,memo),
     msgPlayMove: (data: MsgPlayMove): EncodeObject => ({ typeUrl: "/batphonghan.checkers.checkers.MsgPlayMove", value: data }),
     msgCreateGame: (data: MsgCreateGame): EncodeObject => ({ typeUrl: "/batphonghan.checkers.checkers.MsgCreateGame", value: data }),
+    msgRejectGame: (data: MsgRejectGame): EncodeObject => ({ typeUrl: "/batphonghan.checkers.checkers.MsgRejectGame", value: data }),
     
   };
 };
