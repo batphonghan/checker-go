@@ -19317,6 +19317,11 @@ definitions:
     properties:
       idValue:
         type: string
+  batphonghan.checkers.checkers.MsgPlayMoveResponse:
+    type: object
+    properties:
+      idValue:
+        type: string
   batphonghan.checkers.checkers.NextGame:
     type: object
     properties:
