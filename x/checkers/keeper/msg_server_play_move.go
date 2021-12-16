@@ -22,6 +22,10 @@ func (k msgServer) PlayMove(goCtx context.Context, msg *types.MsgPlayMove) (*typ
 		return nil, sdkerrors.Wrapf(types.ErrGameNotFound, "game not found %s", msg.IdValue)
 	}
 
+	if storedGame.Winner != rules.NO_PLAYER.Color {
+		return nil, types.ErrGameFinished
+	}
+
 	var player rules.Player
 	if strings.Compare(storedGame.Red, msg.Creator) == 0 {
 		player = rules.RED_PLAYER
@@ -57,7 +61,18 @@ func (k msgServer) PlayMove(goCtx context.Context, msg *types.MsgPlayMove) (*typ
 	storedGame.MoveCount++
 	storedGame.Game = game.String()
 	storedGame.Turn = game.Turn.Color
+	storedGame.Deadline = types.FormatDeadline(types.GetNextDeadline(ctx))
+	storedGame.Winner = game.Winner().Color
+
+	nextGame, found := k.Keeper.GetNextGame(ctx)
+	if !found {
+		panic("NextGame not found")
+	}
+	k.Keeper.SendToFifoTail(ctx, &storedGame, &nextGame)
+
+	storedGame.Game = game.String()
 	k.Keeper.SetStoredGame(ctx, storedGame)
+	k.Keeper.SetNextGame(ctx, nextGame)
 
 	ctx.EventManager().EmitEvent(
 		sdk.NewEvent(sdk.EventTypeMessage,
@@ -70,7 +85,6 @@ func (k msgServer) PlayMove(goCtx context.Context, msg *types.MsgPlayMove) (*typ
 			sdk.NewAttribute(types.PlayMoveEventWinner, game.Winner().Color),
 		),
 	)
-
 	return &types.MsgPlayMoveResponse{
 		IdValue:   msg.IdValue,
 		CapturedX: int64(captured.X),

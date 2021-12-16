@@ -12,9 +12,25 @@ export interface StoredGame {
   red: string
   black: string
   moveCount: number
+  beforeId: string
+  afterId: string
+  deadline: string
+  winner: string
 }
 
-const baseStoredGame: object = { creator: '', index: '', game: '', turn: '', red: '', black: '', moveCount: 0 }
+const baseStoredGame: object = {
+  creator: '',
+  index: '',
+  game: '',
+  turn: '',
+  red: '',
+  black: '',
+  moveCount: 0,
+  beforeId: '',
+  afterId: '',
+  deadline: '',
+  winner: ''
+}
 
 export const StoredGame = {
   encode(message: StoredGame, writer: Writer = Writer.create()): Writer {
@@ -38,6 +54,18 @@ export const StoredGame = {
     }
     if (message.moveCount !== 0) {
       writer.uint32(56).uint64(message.moveCount)
+    }
+    if (message.beforeId !== '') {
+      writer.uint32(66).string(message.beforeId)
+    }
+    if (message.afterId !== '') {
+      writer.uint32(74).string(message.afterId)
+    }
+    if (message.deadline !== '') {
+      writer.uint32(82).string(message.deadline)
+    }
+    if (message.winner !== '') {
+      writer.uint32(90).string(message.winner)
     }
     return writer
   },
@@ -69,6 +97,18 @@ export const StoredGame = {
           break
         case 7:
           message.moveCount = longToNumber(reader.uint64() as Long)
+          break
+        case 8:
+          message.beforeId = reader.string()
+          break
+        case 9:
+          message.afterId = reader.string()
+          break
+        case 10:
+          message.deadline = reader.string()
+          break
+        case 11:
+          message.winner = reader.string()
           break
         default:
           reader.skipType(tag & 7)
@@ -115,6 +155,26 @@ export const StoredGame = {
     } else {
       message.moveCount = 0
     }
+    if (object.beforeId !== undefined && object.beforeId !== null) {
+      message.beforeId = String(object.beforeId)
+    } else {
+      message.beforeId = ''
+    }
+    if (object.afterId !== undefined && object.afterId !== null) {
+      message.afterId = String(object.afterId)
+    } else {
+      message.afterId = ''
+    }
+    if (object.deadline !== undefined && object.deadline !== null) {
+      message.deadline = String(object.deadline)
+    } else {
+      message.deadline = ''
+    }
+    if (object.winner !== undefined && object.winner !== null) {
+      message.winner = String(object.winner)
+    } else {
+      message.winner = ''
+    }
     return message
   },
 
@@ -127,6 +187,10 @@ export const StoredGame = {
     message.red !== undefined && (obj.red = message.red)
     message.black !== undefined && (obj.black = message.black)
     message.moveCount !== undefined && (obj.moveCount = message.moveCount)
+    message.beforeId !== undefined && (obj.beforeId = message.beforeId)
+    message.afterId !== undefined && (obj.afterId = message.afterId)
+    message.deadline !== undefined && (obj.deadline = message.deadline)
+    message.winner !== undefined && (obj.winner = message.winner)
     return obj
   },
 
@@ -166,6 +230,26 @@ export const StoredGame = {
       message.moveCount = object.moveCount
     } else {
       message.moveCount = 0
+    }
+    if (object.beforeId !== undefined && object.beforeId !== null) {
+      message.beforeId = object.beforeId
+    } else {
+      message.beforeId = ''
+    }
+    if (object.afterId !== undefined && object.afterId !== null) {
+      message.afterId = object.afterId
+    } else {
+      message.afterId = ''
+    }
+    if (object.deadline !== undefined && object.deadline !== null) {
+      message.deadline = object.deadline
+    } else {
+      message.deadline = ''
+    }
+    if (object.winner !== undefined && object.winner !== null) {
+      message.winner = object.winner
+    } else {
+      message.winner = ''
     }
     return message
   }

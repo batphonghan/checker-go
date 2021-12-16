@@ -34,6 +34,14 @@ func (k msgServer) RejectGame(goCtx context.Context, msg *types.MsgRejectGame) (
 
 	k.Keeper.RemoveStoredGame(ctx, msg.IdValue)
 
+	nextGame, found := k.Keeper.GetNextGame(ctx)
+	if !found {
+		panic("NextGame not found")
+	}
+	k.Keeper.RemoveFromFifo(ctx, &storedGame, &nextGame)
+	k.Keeper.RemoveStoredGame(ctx, msg.IdValue)
+	k.Keeper.SetNextGame(ctx, nextGame)
+
 	ctx.EventManager().EmitEvent(
 		sdk.NewEvent(sdk.EventTypeMessage,
 			sdk.NewAttribute(sdk.AttributeKeyModule, "checkers"),
