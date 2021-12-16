@@ -1,0 +1,14 @@
+syntax = "proto3";
+package batphonghan.checkers.checkers;
+
+option go_package = "github.com/batphonghan/checkers/x/checkers/types";
+
+import "gogoproto/gogo.proto";
+
+message PlayerInfo {
+  string creator = 1;
+  string index = 2;
+  uint64 wonCount = 3; 
+  uint64 lostCount = 4; 
+  uint64 forfeitedCount = 5; 
+}

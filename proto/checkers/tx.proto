@@ -42,6 +42,7 @@ message MsgCreateGame {
   string creator = 1;
   string red = 2;
   string black = 3;
+  string token = 5; // Denomination of the wager.
 }
 
 message MsgCreateGameResponse {

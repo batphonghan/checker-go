@@ -7,11 +7,18 @@ import (
 
 var _ sdk.Msg = &MsgCreateGame{}
 
-func NewMsgCreateGame(creator string, red string, black string) *MsgCreateGame {
+func NewMsgCreateGame(
+	creator string,
+	red string,
+	black string,
+	wager uint64,
+	token string,
+) *MsgCreateGame {
 	return &MsgCreateGame{
 		Creator: creator,
 		Red:     red,
 		Black:   black,
+		Token:   token,
 	}
 }
 

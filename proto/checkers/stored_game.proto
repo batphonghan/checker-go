@@ -17,4 +17,5 @@ message StoredGame {
   string afterId = 9;
   string deadline = 10;
   string winner = 11;
+  string token = 13; // Denomination of the wager.
 }

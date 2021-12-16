@@ -72,3 +72,17 @@ const (
 	ForfeitGameEventIdValue = "IdValue"
 	ForfeitGameEventWinner  = "Winner"
 )
+
+const (
+	CreateGameGas = 10
+	PlayMoveGas   = 10
+	RejectGameGas = 0
+)
+
+const (
+	StoredGameEventToken = "Token"
+)
+
+const (
+	PlayerInfoKey = "PlayerInfo-value-"
+)

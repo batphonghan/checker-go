@@ -4,6 +4,7 @@ package batphonghan.checkers.checkers;
 import "google/api/annotations.proto";
 import "cosmos/base/query/v1beta1/pagination.proto";
 // this line is used by starport scaffolding # 1
+import "checkers/player_info.proto";
 import "checkers/stored_game.proto";
 import "checkers/next_game.proto";
 
@@ -12,6 +13,23 @@ option go_package = "github.com/batphonghan/checkers/x/checkers/types";
 // Query defines the gRPC querier service.
 service Query {
     // this line is used by starport scaffolding # 2
+
+	// Queries a playerInfo by index.
+	rpc PlayerInfo(QueryGetPlayerInfoRequest) returns (QueryGetPlayerInfoResponse) {
+		option (google.api.http).get = "/batphonghan/checkers/checkers/playerInfo/{index}";
+	}
+
+	// Queries a list of playerInfo items.
+	rpc PlayerInfoAll(QueryAllPlayerInfoRequest) returns (QueryAllPlayerInfoResponse) {
+		option (google.api.http).get = "/batphonghan/checkers/checkers/playerInfo";
+	}
+
+
+	// Queries a list of canPlayMove items.
+	rpc CanPlayMove(QueryCanPlayMoveRequest) returns (QueryCanPlayMoveResponse) {
+		option (google.api.http).get = "/batphonghan/checkers/checkers/canPlayMove";
+	}
+
 
 	// Queries a storedGame by index.
 	rpc StoredGame(QueryGetStoredGameRequest) returns (QueryGetStoredGameResponse) {
@@ -32,6 +50,36 @@ service Query {
 }
 
 // this line is used by starport scaffolding # 3
+message QueryGetPlayerInfoRequest {
+	string index = 1;
+}
+
+message QueryGetPlayerInfoResponse {
+	PlayerInfo PlayerInfo = 1;
+}
+
+message QueryAllPlayerInfoRequest {
+	cosmos.base.query.v1beta1.PageRequest pagination = 1;
+}
+
+message QueryAllPlayerInfoResponse {
+	repeated PlayerInfo PlayerInfo = 1;
+	cosmos.base.query.v1beta1.PageResponse pagination = 2;
+}
+message QueryCanPlayMoveRequest {
+  string idValue = 1;
+  string player = 2;
+  uint64 fromX = 3;
+  uint64 fromY = 4;
+  uint64 toX = 5;
+  uint64 toY = 6;
+}
+
+message QueryCanPlayMoveResponse {
+  bool possible = 1;
+  string reason = 2;
+}
+
 message QueryGetStoredGameRequest {
 	string index = 1;
 }
